@@ -7,12 +7,16 @@ package com.usa.Ciclo3R3;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -27,40 +31,42 @@ import javax.persistence.Table;
 public class Computer implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    /**
-     * Atributos ID
-     */
     private Integer idComputer;
-    /**
-     * Atributos brand
-     */
-    private String brand;  
-    /**
-     * Atributos year
-     */
-    private Integer year; 
-    /**
-     * Atributos name
-     */
+    @Column(length=45)
     private String name;
-    /**
-     * Atributos description
-     */
+    @Column(length=45)
+    private String brand;
+    private Integer year;
+    @Column(length=250)
     private String description;
-    /**
-     * Relación entre computer y category
-     */
+    
     @ManyToOne
-    @JoinColumn(name="id")
-    @JsonIgnoreProperties("category")
+    @JoinColumn(name = "categoryId")
+    @JsonIgnoreProperties("computer")
     private Category category;
+
+     @OneToMany(cascade = {CascadeType.PERSIST},mappedBy = "computer")
+    @JsonIgnoreProperties({"computer", "client"})
+    private List<Message> messages;
+
+    @OneToMany(cascade = {CascadeType.PERSIST},mappedBy = "computer")
+    @JsonIgnoreProperties({"computer", "client"})
+    private List<Reservation> reservations;
 
     public Integer getIdComputer() {
         return idComputer;
     }
 
-    public void setIdComputer(Integer idComputer) {
-        this.idComputer = idComputer;
+    public void setId(Integer id) {
+        this.idComputer = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBrand() {
@@ -79,14 +85,6 @@ public class Computer implements Serializable{
         this.year = year;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -102,9 +100,25 @@ public class Computer implements Serializable{
     public void setCategory(Category category) {
         this.category = category;
     }
- 
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+      
+    
     
 }
-
 
 
